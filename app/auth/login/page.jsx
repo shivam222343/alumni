@@ -39,7 +39,7 @@ export default function LoginPage() {
 
       // Verify session is established and get user
       const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
-      
+
       if (userError || !currentUser) {
         setError("Failed to establish session. Please try again.")
         setLoading(false)
@@ -52,17 +52,17 @@ export default function LoginPage() {
         .select("role, first_name, last_name, email")
         .eq("id", currentUser.id)
         .single()
-      
+
       if (profileError) {
         console.error("Profile fetch error:", profileError)
       }
-      
+
       // Check if profile is incomplete
-      const isProfileIncomplete = !profile || 
-        !profile.first_name || 
-        !profile.last_name || 
+      const isProfileIncomplete = !profile ||
+        !profile.first_name ||
+        !profile.last_name ||
         !profile.email
-      
+
       // Use router.replace to avoid back button issues
       if (profile?.role === "admin") {
         router.replace("/admin/dashboard")
@@ -80,16 +80,16 @@ export default function LoginPage() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-primary/10 shadow-2xl bg-card/95 backdrop-blur-xl">
       <div className="p-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h1>
-        <p className="text-slate-600 mb-8">Sign in to your account</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
+        <p className="text-muted-foreground mb-8">Sign in to your account</p>
 
-        {error && <div className="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</div>}
+        {error && <div className="mb-4 rounded-lg bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive font-medium">{error}</div>}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" className="text-foreground">Email Address</Label>
             <Input
               id="email"
               type="email"
@@ -98,11 +98,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
+              className="bg-background border-input"
             />
           </div>
 
           <div>
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-foreground">Password</Label>
             <Input
               id="password"
               type="password"
@@ -111,21 +112,22 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
+              className="bg-background border-input"
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-12 rounded-xl shadow-lg shadow-primary/20"
             disabled={loading}
           >
             {loading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-slate-600">
+        <div className="mt-6 text-center text-sm text-muted-foreground">
           Don't have an account?{" "}
-          <Link href="/auth/sign-up" className="text-blue-600 hover:underline font-semibold">
+          <Link href="/auth/sign-up" className="text-primary hover:underline font-semibold">
             Sign up here
           </Link>
         </div>
